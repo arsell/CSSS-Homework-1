@@ -6,8 +6,6 @@ output: html_document
 ---
 
 ```{r}
-
-
 data <- read.csv("Data/mysterytsUW.csv")
 library(RColorBrewer)
 data$period <- seq(1,100,1)
