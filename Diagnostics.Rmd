@@ -9,51 +9,71 @@ output: html_document
 
 
 data <- read.csv("Data/mysterytsUW.csv")
+library(RColorBrewer)
 data$period <- seq(1,100,1)
+num.index <- seq(1,18,1)
+parts <- NULL
+for (i in 1:18){
+  parts[[i]] <- data[,i]
+}
 
+#null vectors
+fit <- NULL
+beta <- NULL
+detrended <- NULL
+
+#functions
+
+detrend.ts <- function(ts=NULL, beta=NULL, period=NULL){
+  detrend <- NULL
+  for (i in 1:length(ts)){
+    detrend[i] <- ts[i] - beta*period[i]
+  }
+  return(detrend)
+}
+
+seasonality.graph <- function(data, title){
+  col <- brewer.pal(8, "Blues")
+
+  # Gather the data (sort the number of deaths by month and year in a matrix)
+  seasonality <- matrix(data,nrow=12,ncol=length(data)/12, byrow=FALSE)
+
+  # Repeat them as many times as needed
+  col <-  as.vector(t(matrix(col, nrow=length(col), ncol=ceiling(ncol(seasonality)/length(col)))))
+
+  # Plot each year over the months
+  matplot(seasonality, type="l", col=col, lty=1, xaxt="n", xlab="Month",
+          main=paste0(c("Seasonality",title)))
+  axis(1, at=1:12, labels=c("J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"))
+  abline(a=0,b=0,lty="dashed")
+}
 
 #trend
 
-fit <- NULL
-
 for (i in 1:18){
-  plot(x=data$period, y=data[,i], type="l", ylim=range(min(data[,i]),max(data[,i])))
-  fit[i] <- lm(data[,i]~data[,19]) 
+  #raw ts
+  plot(x=data$period, y=parts[[i]], type="l", ylim=range(min(parts[[i]]),max(parts[[i]])),
+       main=paste0(c("Raw Time Series",num.index[i])))
+  
+  #acf/pacf of raw ts
+  acf(parts[[i]])
+  pacf(parts[[i]])
+  
+  #trend modeling
+  fit[[i]] <- lm(parts[[i]] ~ data$period)
+  beta[i] <- fit[[i]]$coefficients[2]
+  
+  #detrending with plot
+  detrended[[i]] <- detrend.ts(ts=parts[[i]], beta[i], period=data$period)
+  plot(x=data$period, y=detrended[[i]], type="l", ylim=range(min(detrended[[i]]),max(detrended[[i]])),
+       main=paste0(c("Detrended Time Series",num.index[i])))
+  
+  #acf/pacf of detrended ts
+  acf(detrended[[i]])
+  pacf(detrended[[i]])
+  
+  #seasonality graph
+  seasonality.graph(data=parts[[i]], title=num.index[i])
 }
-
-plot(x=data$period, y=data$a, type="l", ylim=range(-5,5))
-fit.a <- lm(a ~ period, data=data)
-summary(fit.a)
-beta.a <- fit.a$coefficients[2]
-
-
-aa<-NULL
-for (i in 1:100){
-  aa[i] <- data$a[i] - beta.a*data$period[i]
-}
-
-plot(x=data$period, y=aa, type="l", ylim=range(-5,5))
-
-acf(aa)
-pacf(aa)
-
-
-#seasonality
-plot(1,type='n',xlim=c(1,12),ylim=c(-4,4),xlab='Month', ylab='Value')
-lines(data$a[1:12], type='l', col=rainbow(9)[1])
-lines(data$a[12:24], type='l', col=rainbow(9)[2])
-lines(data$a[25:36], type='l', col=rainbow(9)[3])
-lines(data$a[37:48], type='l', col=rainbow(9)[4])
-lines(data$a[49:60], type='l', col=rainbow(9)[5])
-lines(data$a[61:72], type='l', col=rainbow(9)[6])
-lines(data$a[73:84], type='l', col=rainbow(9)[7])
-lines(data$a[85:96], type='l', col=rainbow(9)[8])
-lines(data$a[97:100], type='l', col=rainbow(9)[9])
-
-
-
-#ARMA
-acf(data$a)
-pacf(data$a)
 
 ```

@@ -2,6 +2,7 @@
 
 data <- read.csv("Data/mysterytsUW.csv")
 data$period <- seq(1,100,1)
+library(RColorBrewer)
 
 plot(x=data$period, y=data$a, type="l", ylim=range(-4,4))
 
@@ -33,16 +34,16 @@ pacf(aa)
 
 
 #seasonality
-plot(1,type='n',xlim=c(1,12),ylim=c(-4,4),xlab='Month', ylab='Value')
-lines(data$a[1:12], type='l', col=rainbow(9)[1])
-lines(data$a[12:24], type='l', col=rainbow(9)[2])
-lines(data$a[25:36], type='l', col=rainbow(9)[3])
-lines(data$a[37:48], type='l', col=rainbow(9)[4])
-lines(data$a[49:60], type='l', col=rainbow(9)[5])
-lines(data$a[61:72], type='l', col=rainbow(9)[6])
-lines(data$a[73:84], type='l', col=rainbow(9)[7])
-lines(data$a[85:96], type='l', col=rainbow(9)[8])
-lines(data$a[97:100], type='l', col=rainbow(9)[9])
+plot(1,type='n',xlim=c(1,12), ylim=range(min(data$j),max(data$j)), xlab='Month', ylab='Value')
+lines(data$j[1:12], type='l', col=rainbow(9)[1])
+lines(data$j[13:24], type='l', col=rainbow(9)[2])
+lines(data$j[25:36], type='l', col=rainbow(9)[3])
+lines(data$j[37:48], type='l', col=rainbow(9)[4])
+lines(data$j[49:60], type='l', col=rainbow(9)[5])
+lines(data$j[61:72], type='l', col=rainbow(9)[6])
+lines(data$j[73:84], type='l', col=rainbow(9)[7])
+lines(data$j[85:96], type='l', col=rainbow(9)[8])
+lines(data$j[97:100], type='l', col=rainbow(9)[9])
 
 #Look at the monthly cycle by plotting each year separately
 
@@ -50,14 +51,14 @@ lines(data$a[97:100], type='l', col=rainbow(9)[9])
 col <- brewer.pal(8, "Blues")
 
 # Gather the data (sort the number of deaths by month and year in a matrix)
-deathmat <- matrix(death,nrow=12,ncol=length(death)/12, byrow=FALSE)
+datamat <- matrix(parts[[10]],nrow=12,ncol=length(parts[[10]])/12, byrow=FALSE)
 
 # Repeat them as many times as needed
-col <-  as.vector(t(matrix(col, nrow=length(col), ncol=ceiling(ncol(deathmat)/length(col)))))
+col <-  as.vector(t(matrix(col, nrow=length(col), ncol=ceiling(ncol(datamat)/length(col)))))
 
 # Plot each year over the months
-matplot(deathmat, type="l", col=col, lty=1, xaxt="n", ylab="deaths", xlab="Month",
-        main=expression(paste("Monthly view of accident deaths, UK, 1969-1984")))
+matplot(datamat, type="l", col=col, lty=1, xaxt="n", xlab="Month",
+        main=paste0(c("Seasonality",num.index[10])))
 axis(1, at=1:12, labels=c("J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"))
 abline(a=0,b=0,lty="dashed")
 #dev.off()
@@ -94,5 +95,5 @@ for (i in 1:18){
 #detrend
 detrended <- NULL
 
-detrended[[1]] <- detrend.ts(ts=parts[[1]], beta[1], period=data$period)
+detrended[[18]] <- detrend.ts(ts=parts[[18]], beta[18], period=data$period)
 detrended[[1]]
