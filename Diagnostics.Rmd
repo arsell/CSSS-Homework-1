@@ -77,3 +77,55 @@ for (i in 1:18){
 }
 
 ```
+
+```{r}
+# part 2
+data2 <- read.csv("Data/mysterytsUW2.csv")
+data2$period <- seq(1,1000,1)
+parts2 <- NULL
+parts2.i <- NULL
+parts2.ii <- NULL
+
+
+for (i in 1:5){
+  parts2[[i]] <- data2[,i]
+}
+
+
+for (i in 1:5){
+  #question i
+  parts2.i[[i]] <- parts2[[i]][1:20]
+  
+  #raw ts
+  plot(x=data2$period[1:20], y=parts2.i[[i]], type="l", ylim=range(min(parts2.i[[i]]),max(parts2.i[[i]])),
+       main=paste0(c("Raw Time Series",num.index[i])),"Observations: 20")
+  
+  #acf/pacf
+  acf(parts2.i[[i]])
+  pacf(parts2.i[[i]])
+
+
+  #question ii
+
+  parts2.ii[[i]] <- parts2[[i]][1:100]
+  
+  #raw ts
+  plot(x=data2$period[1:100], y=parts2.ii[[i]], type="l", ylim=range(min(parts2.ii[[i]]),max(parts2.ii[[i]])),
+       main=paste0(c("Raw Time Series",num.index[i])), "Observations: 100")
+  
+  #acf/pacf
+  acf(parts2.ii[[i]])
+  pacf(parts2.ii[[i]])
+
+
+  # question iii
+
+  #raw ts
+  plot(x=data2$period, y=parts2[[i]], type="l", ylim=range(min(parts2[[i]]),max(parts2[[i]])),
+       main=paste0(c("Raw Time Series",num.index[i])), "Observations: 1000")
+  
+  #acf/pacf
+  acf(parts2[[i]])
+  pacf(parts2[[i]])
+}
+```
