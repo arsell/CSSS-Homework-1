@@ -1,0 +1,59 @@
+---
+title: "Diagnostics"
+author: "Austin Sell"
+date: "April 10, 2018"
+output: html_document
+---
+
+```{r}
+
+
+data <- read.csv("Data/mysterytsUW.csv")
+data$period <- seq(1,100,1)
+
+
+#trend
+
+fit <- NULL
+
+for (i in 1:18){
+  plot(x=data$period, y=data[,i], type="l", ylim=range(min(data[,i]),max(data[,i])))
+  fit[i] <- lm(data[,i]~data[,19]) 
+}
+
+plot(x=data$period, y=data$a, type="l", ylim=range(-5,5))
+fit.a <- lm(a ~ period, data=data)
+summary(fit.a)
+beta.a <- fit.a$coefficients[2]
+
+
+aa<-NULL
+for (i in 1:100){
+  aa[i] <- data$a[i] - beta.a*data$period[i]
+}
+
+plot(x=data$period, y=aa, type="l", ylim=range(-5,5))
+
+acf(aa)
+pacf(aa)
+
+
+#seasonality
+plot(1,type='n',xlim=c(1,12),ylim=c(-4,4),xlab='Month', ylab='Value')
+lines(data$a[1:12], type='l', col=rainbow(9)[1])
+lines(data$a[12:24], type='l', col=rainbow(9)[2])
+lines(data$a[25:36], type='l', col=rainbow(9)[3])
+lines(data$a[37:48], type='l', col=rainbow(9)[4])
+lines(data$a[49:60], type='l', col=rainbow(9)[5])
+lines(data$a[61:72], type='l', col=rainbow(9)[6])
+lines(data$a[73:84], type='l', col=rainbow(9)[7])
+lines(data$a[85:96], type='l', col=rainbow(9)[8])
+lines(data$a[97:100], type='l', col=rainbow(9)[9])
+
+
+
+#ARMA
+acf(data$a)
+pacf(data$a)
+
+```
