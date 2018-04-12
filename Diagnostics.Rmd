@@ -98,7 +98,7 @@ for (i in 1:5){
   
   #raw ts
   plot(x=data2$period[1:20], y=parts2.i[[i]], type="l", ylim=range(min(parts2.i[[i]]),max(parts2.i[[i]])),
-       main=paste0(c("Raw Time Series",num.index[i])),"Observations: 20")
+       main=paste0(c("Raw Time Series",num.index[i],"Observations: 20")))
   
   #acf/pacf
   acf(parts2.i[[i]])
@@ -111,7 +111,7 @@ for (i in 1:5){
   
   #raw ts
   plot(x=data2$period[1:100], y=parts2.ii[[i]], type="l", ylim=range(min(parts2.ii[[i]]),max(parts2.ii[[i]])),
-       main=paste0(c("Raw Time Series",num.index[i])), "Observations: 100")
+       main=paste0(c("Raw Time Series",num.index[i], "Observations: 100")))
   
   #acf/pacf
   acf(parts2.ii[[i]])
@@ -122,7 +122,7 @@ for (i in 1:5){
 
   #raw ts
   plot(x=data2$period, y=parts2[[i]], type="l", ylim=range(min(parts2[[i]]),max(parts2[[i]])),
-       main=paste0(c("Raw Time Series",num.index[i])), "Observations: 1000")
+       main=paste0(c("Raw Time Series",num.index[i], "Observations: 1000")))
   
   #acf/pacf
   acf(parts2[[i]])
