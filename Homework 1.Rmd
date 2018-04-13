@@ -5,6 +5,7 @@ date: "April 12, 2018"
 output: html_document
 ---
 
+
 First guesses
 
 ## Part A-1
@@ -17,7 +18,7 @@ MA(12) where $\psi_{12}=0.5$
 
 ## Part C-3
 
-deterministic trend, where $beta=$
+deterministic trend, where $\beta=$
 
 ## Part D-4
 
@@ -49,7 +50,7 @@ Monthly seasonal
 
 ## Part K-11
 
-deterministic trend, where $beta=$
+deterministic trend, where $\beta=$
 
 ## Part L-12
 
@@ -61,17 +62,17 @@ Monthly seasonality, maybe more
 
 ## Part N-14
 
-deterministic trend, where $beta=$
+deterministic trend, where $\beta=$
 AR(1) where $\phi_1=0.5$
 
 ## Part O-15
 
-deterministic trend, where $beta=$
+deterministic trend, where $\beta=$
 Seasonality in Q3 (July, August, September)
 
 ## Part P-16
 
-deterministic trend, where $beta=$
+deterministic trend, where $\beta=$
 Monthly seasonality
 
 ## Part Q-17
@@ -80,7 +81,7 @@ MA(2)? ARMA(1,2)?  AR(2)?
 
 ## Part R-18
 
-deterministic trend, where $beta=$
+deterministic trend, where $\beta=$
 MA(1) where $\psi_1=0.5$
 
 
