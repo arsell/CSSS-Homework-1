@@ -86,7 +86,7 @@ MA(12) where $\psi_{12}=0.5$
 ts.graph(x=data$period, y=parts[[3]], title="Raw Time Series C")
 ```
 
-deterministic trend, where $\beta=$
+deterministic trend, where $\hat{\beta}=`r beta[3]`$
 
 ```{r echo=FALSE}
 ts.graph(x=data$period, y=detrend.ts(ts=parts[[3]], beta=beta[3], period=data$period), title="Detrended Time Series C")
@@ -99,7 +99,7 @@ ts.graph(x=data$period, y=detrend.ts(ts=parts[[3]], beta=beta[3], period=data$pe
 ts.graph(x=data$period, y=parts[[4]], title="Raw Time Series D")
 ```
 
-MA(3) where $\psi_1=0.5, \psi_2=-0.3, \psi_3=0.3$
+MA(1) where $\psi_1=0.5$
 
 ## Part E-5
 
@@ -132,7 +132,7 @@ AR(1) where $\phi_1=0.8$
 ts.graph(x=data$period, y=parts[[8]], title="Raw Time Series H")
 ```
 
-MA(2) where $\psi_1=0.5, \psi_2=-0.3$
+AR(2) where $\phi_1=0.5, \phi_2=-0.3$
 
 ## Part I-9
 
@@ -156,7 +156,7 @@ Monthly seasonal
 ts.graph(x=data$period, y=parts[[11]], title="Raw Time Series K")
 ```
 
-deterministic trend, where $\beta=$
+deterministic trend, where $\hat{\beta}=`r beta[11]`$
 
 ## Part L-12
 
@@ -173,6 +173,7 @@ ts.graph(x=data$period, y=parts[[13]], title="Raw Time Series M")
 ```
 
 Monthly seasonality, maybe more
+MA(1)
 
 ## Part N-14
 
@@ -180,7 +181,7 @@ Monthly seasonality, maybe more
 ts.graph(x=data$period, y=parts[[14]], title="Raw Time Series N")
 ```
 
-deterministic trend, where $\beta=$
+deterministic trend, where $\hat{\beta}=`r beta[14]`$
 AR(1) where $\phi_1=0.5$
 
 ## Part O-15
@@ -189,8 +190,9 @@ AR(1) where $\phi_1=0.5$
 ts.graph(x=data$period, y=parts[[15]], title="Raw Time Series O")
 ```
 
-deterministic trend, where $\beta=$
+deterministic trend, where $\hat{\beta}=`r beta[15]`$
 Seasonality in Q3 (July, August, September)
+that's probably all
 
 ## Part P-16
 
@@ -198,8 +200,9 @@ Seasonality in Q3 (July, August, September)
 ts.graph(x=data$period, y=parts[[16]], title="Raw Time Series P")
 ```
 
-deterministic trend, where $\beta=$
+deterministic trend, where $\hat{\beta}=`r beta[16]`$
 Monthly seasonality
+possibly also AR(1)
 
 ## Part Q-17
 
@@ -207,7 +210,7 @@ Monthly seasonality
 ts.graph(x=data$period, y=parts[[17]], title="Raw Time Series Q")
 ```
 
-MA(2)? ARMA(1,2)?  AR(2)?
+MA(2) where $\psi_1=0.25, \psi_2=0.3$
 
 ## Part R-18
 
@@ -215,8 +218,8 @@ MA(2)? ARMA(1,2)?  AR(2)?
 ts.graph(x=data$period, y=parts[[18]], title="Raw Time Series R")
 ```
 
-deterministic trend, where $\beta=$
-MA(1) where $\psi_1=0.5$
+deterministic trend, where $\hat{\beta}=`r beta[18]`$
+AR(2) where $\phi_1=0.5, \phi_2=-0.2$
 
 # Question 2
 

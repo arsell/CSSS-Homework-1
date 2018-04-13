@@ -97,3 +97,18 @@ detrended <- NULL
 
 detrended[[18]] <- detrend.ts(ts=parts[[18]], beta[18], period=data$period)
 detrended[[1]]
+
+y <- arima.sim(list(order = c(2,0,0), ar = c(0.5, -0.2), ma = NULL), n=100)
+
+#Plot the series against time
+plot(y,type="l",col="red",ylab="y",xlab="Time",
+     main = expression(paste("Simulated AR(1) process with ",phi[1]," = 0.50")))
+abline(a=0,b=0,lty="dashed")
+
+#Plot the ACF
+acf(y, main = expression(paste("ACF of AR(1) process with ",phi[1]," = 0.50")))
+
+#Plot the PACF
+pacf(y, main = expression(paste("PACF of AR(1) process with ",phi[1]," = 0.50")))
+
+
