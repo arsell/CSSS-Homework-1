@@ -1,85 +1,219 @@
 ---
 title: "Homework 1"
 author: "Austin Sell"
-date: "April 12, 2018"
+date: "April 17, 2018"
 output: html_document
 ---
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+#data
+data <- read.csv("Data/mysterytsUW.csv")
+data2 <- read.csv("Data/mysterytsUW2.csv")
+
+data$period <- seq(1,100,1)
+data2$period <- seq(1,1000,1)
+
+
+#packages
+library(RColorBrewer)
+
+
+#extract values
+parts <- NULL
+for (i in 1:18){
+  parts[[i]] <- data[,i]
+}
+
+fit <- NULL
+beta <- NULL
+for (i in 1:18){
+  fit[[i]] <- lm(parts[[i]] ~ data$period)
+  beta[i] <- fit[[i]]$coefficients[2]
+}
+
+#define functions
+ts.graph <- function(x, y, title){
+  plot(x=x, y=y, type="l", ylim=range(min(y), max(y)), main=paste0(c(title)))
+}
+
+detrend.ts <- function(ts, beta, period){
+  detrend <- NULL
+  for (i in 1:length(ts)){
+    detrend[i] <- ts[i] - beta*period[i]
+  }
+  return(detrend)
+}
+
+seasonality.graph <- function(data, title){
+  col <- brewer.pal(8, "Blues")
+
+  # Gather the data (sort the number of deaths by month and year in a matrix)
+  seasonality <- matrix(data,nrow=12,ncol=length(data)/12, byrow=FALSE)
+
+  # Repeat them as many times as needed
+  col <-  as.vector(t(matrix(col, nrow=length(col), ncol=ceiling(ncol(seasonality)/length(col)))))
+
+  # Plot each year over the months
+  matplot(seasonality, type="l", col=col, lty=1, xaxt="n", xlab="Month",
+          main=paste0(c("Seasonality",title)))
+  axis(1, at=1:12, labels=c("J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"))
+  abline(a=0,b=0,lty="dashed")
+}
+
+```
 
 First guesses
 
 ## Part A-1
 
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[1]], title="Raw Time Series A")
+```
+
 MA(2) where $\psi_2=-0.5$
 
 ## Part B-2
+
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[2]], title="Raw Time Series B")
+```
 
 MA(12) where $\psi_{12}=0.5$
 
 ## Part C-3
 
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[3]], title="Raw Time Series C")
+```
+
 deterministic trend, where $\beta=$
 
+```{r echo=FALSE}
+ts.graph(x=data$period, y=detrend.ts(ts=parts[[3]], beta=beta[3], period=data$period), title="Detrended Time Series C")
+
+```
+
 ## Part D-4
+
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[4]], title="Raw Time Series D")
+```
 
 MA(3) where $\psi_1=0.5, \psi_2=-0.3, \psi_3=0.3$
 
 ## Part E-5
 
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[5]], title="Raw Time Series E")
+```
+
 AR(1) where $\phi_1=0.7$
 
 ## Part F-6
+
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[6]], title="Raw Time Series F")
+```
 
 Seasonality at Q2 (April, May, June)
 need to adjust after
 
 ## Part G-7
 
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[7]], title="Raw Time Series G")
+```
+
 AR(1) where $\phi_1=0.8$
 
 ## Part H-8
+
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[8]], title="Raw Time Series H")
+```
 
 MA(2) where $\psi_1=0.5, \psi_2=-0.3$
 
 ## Part I-9
 
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[9]], title="Raw Time Series I")
+```
+
 Nothing (maybe MA(1) where $\psi_1=-0.2$)
 
 ## Part J-10
+
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[10]], title="Raw Time Series J")
+```
 
 Monthly seasonal
 
 ## Part K-11
 
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[11]], title="Raw Time Series K")
+```
+
 deterministic trend, where $\beta=$
 
 ## Part L-12
+
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[12]], title="Raw Time Series L")
+```
 
 AR(1) where $\phi_1=0.9$
 
 ## Part M-13
 
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[13]], title="Raw Time Series M")
+```
+
 Monthly seasonality, maybe more
 
 ## Part N-14
+
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[14]], title="Raw Time Series N")
+```
 
 deterministic trend, where $\beta=$
 AR(1) where $\phi_1=0.5$
 
 ## Part O-15
 
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[15]], title="Raw Time Series O")
+```
+
 deterministic trend, where $\beta=$
 Seasonality in Q3 (July, August, September)
 
 ## Part P-16
+
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[16]], title="Raw Time Series P")
+```
 
 deterministic trend, where $\beta=$
 Monthly seasonality
 
 ## Part Q-17
 
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[17]], title="Raw Time Series Q")
+```
+
 MA(2)? ARMA(1,2)?  AR(2)?
 
 ## Part R-18
+
+```{r echo=FALSE}
+ts.graph(x=data$period, y=parts[[18]], title="Raw Time Series R")
+```
 
 deterministic trend, where $\beta=$
 MA(1) where $\psi_1=0.5$
