@@ -84,4 +84,35 @@ MA(2)? ARMA(1,2)?  AR(2)?
 deterministic trend, where $\beta=$
 MA(1) where $\psi_1=0.5$
 
+# Question 2
+
+## Part S-1
+
+20:   AR(1) of 0.8
+100:  AR(1) of 0.95 (possibly nonstationary)
+1000: AR(1) of 1
+
+## Part T-2
+
+20:   AR(1) of 0.4
+100:  AR(1) of 0.75
+1000: AR(1) of 0.8
+
+## Part U-3
+
+20:   AR(1) of 0.9
+100:  AR(1) of 0.95
+1000: AR(2) of 0.95 and -0.2
+
+## Part V-4
+
+20:   AR(1) of 0.9
+100:  AR(1) of 0.95
+1000: AR(1) of 0.99
+
+## Part W-5
+
+20:   AR(2) of 0.6 and -0.4
+100:  AR(1) of 0.9
+1000: AR(1) of 1
 
