@@ -31,6 +31,7 @@ AR(1) where $\phi_1=0.7$
 ## Part F-6
 
 Seasonality at Q2 (April, May, June)
+need to adjust after
 
 ## Part G-7
 
