@@ -2,7 +2,7 @@
 title: "Homework 1"
 author: "Austin Sell"
 date: "April 17, 2018"
-output: html_document
+output: pdf_document
 ---
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
@@ -55,14 +55,21 @@ seasonality.graph <- function(data, title){
 
   # Plot each year over the months
   matplot(seasonality, type="l", col=col, lty=1, xaxt="n", xlab="Month",
-          main=paste0(c("Seasonality",title)))
+          main=paste0(c(title)))
   axis(1, at=1:12, labels=c("J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"))
   abline(a=0,b=0,lty="dashed")
 }
 
+seasonal.adjust <- function(data, frequency){
+  data <- ts(data, frequency = frequency)
+  data.decompose <- decompose(data, "additive")
+  data.adjust <- data - data.decompose$seasonal
+  return(data.adjust)
+}
+
 ```
 
-First guesses
+# Question 1
 
 ## Part A-1
 
@@ -70,7 +77,9 @@ First guesses
 ts.graph(x=data$period, y=parts[[1]], title="Raw Time Series A")
 ```
 
-MA(2) where $\psi_2=-0.5$
+The singular spike in the ACF suggests an MA process. Since the spike is at a lag of 2, the process is second order.
+
+**DGP Guess:** MA(2) where $\psi_2=-0.5$
 
 ## Part B-2
 
@@ -78,7 +87,9 @@ MA(2) where $\psi_2=-0.5$
 ts.graph(x=data$period, y=parts[[2]], title="Raw Time Series B")
 ```
 
-MA(12) where $\psi_{12}=0.5$
+Again there is a singular spike in the ACF, so this is probably an MA process. This time the lag is at 12, and again there doesn't seem to be an effect for the lower lags.
+
+**DGP Guess:** MA(12) where $\psi_{12}=0.5$
 
 ## Part C-3
 
@@ -86,7 +97,9 @@ MA(12) where $\psi_{12}=0.5$
 ts.graph(x=data$period, y=parts[[3]], title="Raw Time Series C")
 ```
 
-deterministic trend, where $\hat{\beta}=`r beta[3]`$
+Since we know that the time series is covariance stationary, the trend seen is not stochastic and is thus likely a deterministic trend. The detrended time series is shown below.
+
+**DGP Guess:** deterministic trend, where $\hat{\beta}=`r beta[3]`$
 
 ```{r echo=FALSE}
 ts.graph(x=data$period, y=detrend.ts(ts=parts[[3]], beta=beta[3], period=data$period), title="Detrended Time Series C")
@@ -99,7 +112,9 @@ ts.graph(x=data$period, y=detrend.ts(ts=parts[[3]], beta=beta[3], period=data$pe
 ts.graph(x=data$period, y=parts[[4]], title="Raw Time Series D")
 ```
 
-MA(1) where $\psi_1=0.5$
+The singular spike in the ACF suggests an MA process. However, the PACF has further spikes, so this could be a higher order AR process with a negative sign for the second term. These spikes could also be due to chance though.
+
+**DGP Guess:** MA(1) where $\psi_1=0.5$
 
 ## Part E-5
 
@@ -107,16 +122,25 @@ MA(1) where $\psi_1=0.5$
 ts.graph(x=data$period, y=parts[[5]], title="Raw Time Series E")
 ```
 
-AR(1) where $\phi_1=0.7$
+The declining spikes in the ACF suggests an AR process, and the singular spike in the PACF suggests a first order AR process.
+
+**DGP Guess:** AR(1) where $\phi_1=0.7$
 
 ## Part F-6
 
-```{r echo=FALSE}
+```{r echo=FALSE, warning=FALSE}
 ts.graph(x=data$period, y=parts[[6]], title="Raw Time Series F")
+seasonality.graph(data=parts[[6]], title="Seasonality Graph F")
 ```
 
-Seasonality at Q2 (April, May, June)
-need to adjust after
+There appears to be a seasonal effect in the second quarter (April, May, June). The seasonally adjusted time series is shown below.
+
+**DGP Guess:** Seasonality at Q2 (April, May, June)
+
+```{r echo=FALSE, warning=FALSE}
+ts.graph(x=data$period, y=seasonal.adjust(data=parts[[6]], frequency=12), title="Seasonally Adjusted Time Series F")
+seasonality.graph(data=seasonal.adjust(data=parts[[6]], frequency=12), title="Seasonally Adjusted Seasonality Graph F")
+```
 
 ## Part G-7
 
@@ -124,7 +148,9 @@ need to adjust after
 ts.graph(x=data$period, y=parts[[7]], title="Raw Time Series G")
 ```
 
-AR(1) where $\phi_1=0.8$
+The declining spikes in the ACF suggests an AR process. The singular spike in the PACF shows that this is a first order AR. 
+
+**DGP Guess:** AR(1) where $\phi_1=0.8$
 
 ## Part H-8
 
@@ -132,7 +158,9 @@ AR(1) where $\phi_1=0.8$
 ts.graph(x=data$period, y=parts[[8]], title="Raw Time Series H")
 ```
 
-AR(2) where $\phi_1=0.5, \phi_2=-0.3$
+The singular spike in the ACF suggests an MA process, but with the negative spike in the PACF at lag 2 this could be an AR process. This would prevent the typical AR pattern of declining spikes in the ACF.
+
+DGP Guess: AR(2) where $\phi_1=0.5, \phi_2=-0.3$
 
 ## Part I-9
 
@@ -140,15 +168,24 @@ AR(2) where $\phi_1=0.5, \phi_2=-0.3$
 ts.graph(x=data$period, y=parts[[9]], title="Raw Time Series I")
 ```
 
-Nothing (maybe MA(1) where $\psi_1=-0.2$)
+There don't seem to be any meaningful spikes in the ACF/PACF. There is also no clear trend or seasonal pattern.
+
+**DGP Guess:** Random noise
 
 ## Part J-10
 
-```{r echo=FALSE}
+```{r echo=FALSE, warning=FALSE}
 ts.graph(x=data$period, y=parts[[10]], title="Raw Time Series J")
+seasonality.graph(data=parts[[10]], title="Seasonality Graph J")
 ```
 
-Monthly seasonal
+This time series has a pretty clear monthly seasonal effect that can be seen in the graph above. The seasonally-adjusted time series is below.
+
+**DGP Guess:** Monthly seasonal pattern
+
+```{r echo=FALSE, warning=FALSE}
+seasonality.graph(data=seasonal.adjust(data=parts[[10]], frequency=12), title="Seasonally Adjusted Seasonality Graph J")
+```
 
 ## Part K-11
 
@@ -156,7 +193,14 @@ Monthly seasonal
 ts.graph(x=data$period, y=parts[[11]], title="Raw Time Series K")
 ```
 
-deterministic trend, where $\hat{\beta}=`r beta[11]`$
+There's a pretty clear negative trend in this time series (given we know it is stationary). The detrended time series is shown below.
+
+**DGP Guess:** deterministic trend, where $\hat{\beta}=`r beta[11]`$
+
+```{r echo=FALSE}
+ts.graph(x=data$period, y=detrend.ts(ts=parts[[11]], beta=beta[11], period=data$period), title="Detrended Time Series K")
+
+```
 
 ## Part L-12
 
@@ -164,16 +208,24 @@ deterministic trend, where $\hat{\beta}=`r beta[11]`$
 ts.graph(x=data$period, y=parts[[12]], title="Raw Time Series L")
 ```
 
-AR(1) where $\phi_1=0.9$
+The declining spikes in ACF suggests an AR process. The singular spike in the PACF shows that it's first order.
+
+**DGP Guess:** AR(1) where $\phi_1=0.9$
 
 ## Part M-13
 
-```{r echo=FALSE}
+```{r echo=FALSE, warning=FALSE}
 ts.graph(x=data$period, y=parts[[13]], title="Raw Time Series M")
+seasonality.graph(data=parts[[13]], title="Seasonality Graph M")
 ```
 
-Monthly seasonality, maybe more
-MA(1)
+There's a pretty clear seasonal effect, but we know that there may be multiple effects. After seasonally adjusting the data (shown below), there still appears to be a first order MA process given the singular spike in the ACF.
+
+**DGP Guess:** Monthly seasonality AND MA(1) where $\psi_1=0.5$
+
+```{r echo=FALSE, warning=FALSE}
+seasonality.graph(data=seasonal.adjust(data=parts[[13]], frequency=12), title="Seasonally Adjusted Seasonality Graph M")
+```
 
 ## Part N-14
 
@@ -181,28 +233,45 @@ MA(1)
 ts.graph(x=data$period, y=parts[[14]], title="Raw Time Series N")
 ```
 
-deterministic trend, where $\hat{\beta}=`r beta[14]`$
-AR(1) where $\phi_1=0.5$
+There seems to be a deterministic trend, but after removing that (shown below) there still appears to be an AR process shown by the declining spikes in the ACF.
+
+**DGP Guess:** deterministic trend, where $\hat{\beta}=`r beta[14]`$ AND AR(1) where $\phi_1=0.5$
+
+```{r echo=FALSE}
+ts.graph(x=data$period, y=detrend.ts(ts=parts[[14]], beta=beta[14], period=data$period), title="Detrended Time Series N")
+```
 
 ## Part O-15
 
-```{r echo=FALSE}
+```{r echo=FALSE, warning=FALSE}
 ts.graph(x=data$period, y=parts[[15]], title="Raw Time Series O")
+seasonality.graph(data=parts[[15]], title="Seasonality Graph O")
 ```
 
-deterministic trend, where $\hat{\beta}=`r beta[15]`$
-Seasonality in Q3 (July, August, September)
-that's probably all
+There appears to be a deterministic trend as well as a seasonal effect in the third quarter. After detrending and seasonally adjusting the time series, there does not appear to be anything besides random noise. 
+
+**DGP Guess:** deterministic trend, where $\hat{\beta}=`r beta[15]`$ AND Seasonality in Q3 (July, August, September)
+
+```{r echo=FALSE, warning=FALSE}
+ts.graph(x=data$period, y=seasonal.adjust(data=detrend.ts(ts=parts[[15]], beta=beta[15], period=data$period), frequency = 12), title="Detrended, Seasonally Adjusted Time Series O")
+seasonality.graph(data=seasonal.adjust(data=detrend.ts(ts=parts[[15]], beta=beta[15], period=data$period), frequency = 12), title = "Detrended Seasonally Adjusted Seasonality Graph O")
+```
 
 ## Part P-16
 
-```{r echo=FALSE}
+```{r echo=FALSE, warning=FALSE}
 ts.graph(x=data$period, y=parts[[16]], title="Raw Time Series P")
+seasonality.graph(data=parts[[16]], title="Seasonality Graph P")
 ```
 
-deterministic trend, where $\hat{\beta}=`r beta[16]`$
-Monthly seasonality
-possibly also AR(1)
+Again we see a a clear deterministic trend as well as a monthly seasonal pattern. After detrending and seasonally adjusting the time series, there also seems to be a first order AR process.
+
+**DGP Guess:** deterministic trend, where $\hat{\beta}=`r beta[16]`$ AND Monthly seasonality AND AR(1) where $\phi_1=0.9$
+
+```{r echo=FALSE, warning=FALSE}
+ts.graph(x=data$period, y=seasonal.adjust(data=detrend.ts(ts=parts[[16]], beta=beta[16], period=data$period), frequency = 12), title="Detrended, Seasonally Adjusted Time Series P")
+seasonality.graph(data=seasonal.adjust(data=detrend.ts(ts=parts[[16]], beta=beta[16], period=data$period), frequency = 12), title = "Detrended Seasonally Adjusted Seasonality Graph P")
+```
 
 ## Part Q-17
 
@@ -210,7 +279,9 @@ possibly also AR(1)
 ts.graph(x=data$period, y=parts[[17]], title="Raw Time Series Q")
 ```
 
-MA(2) where $\psi_1=0.25, \psi_2=0.3$
+There seems to be a second order MA process here, with the two spikes in the ACF and then the sudden dropoff. 
+
+**DGP Guess:** MA(2) where $\psi_1=0.25, \psi_2=0.3$
 
 ## Part R-18
 
@@ -218,16 +289,23 @@ MA(2) where $\psi_1=0.25, \psi_2=0.3$
 ts.graph(x=data$period, y=parts[[18]], title="Raw Time Series R")
 ```
 
-deterministic trend, where $\hat{\beta}=`r beta[18]`$
-AR(2) where $\phi_1=0.5, \phi_2=-0.2$
+There seems to be a clear trend, and after detrending the time series there is still some other effect. The ACF makes it seem like a first order MA process, but the alternating spikes in the PACF makes me think that this might actually be an AR process. 
+
+**DGP Guess:** deterministic trend, where $\hat{\beta}=`r beta[18]`$ AND AR(2) where $\phi_1=0.5, \phi_2=-0.2$
+
+```{r echo=FALSE}
+ts.graph(x=data$period, y=detrend.ts(ts=parts[[18]], beta=beta[18], period=data$period), title="Detrended Time Series R")
+```
 
 # Question 2
 
 ## Part S-1
 
 20:   AR(1) of 0.8
-100:  AR(1) of 0.95 (possibly nonstationary)
-1000: AR(1) of 1
+100:  AR(1) of 0.95 
+1000: AR(1) of 1 (nonstationary)
+
+As the data increased the magnitude of the autoregressive component seemed to increase as well. With 1000 periods it seems likely that the time series is nonstationary, but I'm much more confident in saying that after seeing 1000 periods rather than only 100. 
 
 ## Part T-2
 
@@ -235,11 +313,15 @@ AR(2) where $\phi_1=0.5, \phi_2=-0.2$
 100:  AR(1) of 0.75
 1000: AR(1) of 0.8
 
+With 1000 periods to look at, my confidence in assessing the actual magnitude of the autoregressive component greatly increased.
+
 ## Part U-3
 
 20:   AR(1) of 0.9
 100:  AR(1) of 0.95
 1000: AR(2) of 0.95 and -0.2
+
+With 1000 periods of data, I found evidence of a second order autoregressive component. The magnitude of this effect is small enough that there needs to be a substantial amount of data to be able to detect it.
 
 ## Part V-4
 
@@ -247,9 +329,13 @@ AR(2) where $\phi_1=0.5, \phi_2=-0.2$
 100:  AR(1) of 0.95
 1000: AR(1) of 0.99
 
+With less data, I was concerned that this may be a nonstationary process but wouldn't have been able to tell. With 1000 periods, I'm more confident that the time series is in fact stationary but has an autoregressive component that is very close to 1.
+
 ## Part W-5
 
 20:   AR(2) of 0.6 and -0.4
 100:  AR(1) of 0.9
-1000: AR(1) of 1
+1000: AR(1) of 1 (nonstationary)
+
+My conclusion drastically changed as I looked at more data. I attributed patterns that were probably noise to the actual data generating process. When looking at more data it became more likely that the process was nonstationary. I don't think I would have guessed that this was a nonstationary process without a substantial amount of data.
 
